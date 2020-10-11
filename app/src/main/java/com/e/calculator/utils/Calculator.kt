@@ -8,7 +8,7 @@ private fun getItems(expression: String): List<String> {
     val result = mutableListOf<String>()
 
     expression.forEachIndexed { index, it ->
-        when(it) {
+        when (it) {
             in '0'..'9' -> current += it
             '.' -> current += it
             else -> {
@@ -44,26 +44,40 @@ private fun removeUseLessBrackets(items: List<String>): List<String> {
     return result
 }
 
-private fun example(numberStack: Stack<Double>, operationStack: Stack<Char>, operation: Char) {
+private fun handleOperation(
+    numberStack: Stack<Double>,
+    operationStack: Stack<Char>,
+    operation: Char
+) {
     if (operation == '+' || operation == '-') {
-        while(!operationStack.empty() && (operationStack.peek() == '+' || operationStack.peek() == '-' || operationStack.peek() == '*' || operationStack.peek() == '/')) {
+        while (!operationStack.empty()
+            && (operationStack.peek() == '+'
+                    || operationStack.peek() == '-'
+                    || operationStack.peek() == '*'
+                    || operationStack.peek() == '/')
+        ) {
             val second = numberStack.pop()
             val first = numberStack.pop()
-            when(operationStack.pop()) {
+
+            when (operationStack.pop()) {
                 '+' -> numberStack.push(first + second)
                 '-' -> numberStack.push(first - second)
                 '*' -> numberStack.push(first * second)
-                '/' -> if (second != 0.0) numberStack.push(first / second) else TODO()
+                '/' -> if (second != 0.0) numberStack.push(first / second) else
+                    throw ArithmeticException("Division by zero attempt.")
             }
         }
     } else {
-        while(!operationStack.empty() &&
-            (operationStack.peek() == '*' || operationStack.peek() == '/')) {
+        while (!operationStack.empty() &&
+            (operationStack.peek() == '*' || operationStack.peek() == '/')
+        ) {
             val second = numberStack.pop()
             val first = numberStack.pop()
-            when(operationStack.pop()) {
+
+            when (operationStack.pop()) {
                 '*' -> numberStack.push(first * second)
-                '/' -> if (second != 0.0) numberStack.push(first / second) else TODO()
+                '/' -> if (second != 0.0) numberStack.push(first / second) else
+                    throw ArithmeticException("Division by zero attempt.")
             }
         }
     }
@@ -71,15 +85,17 @@ private fun example(numberStack: Stack<Double>, operationStack: Stack<Char>, ope
     operationStack.push(operation)
 }
 
-private fun example1(numberStack: Stack<Double>, operationStack: Stack<Char>) {
+private fun handleCloseBracket(numberStack: Stack<Double>, operationStack: Stack<Char>) {
     while (!operationStack.empty() && operationStack.peek() != '(') {
         val second = numberStack.pop()
         val first = numberStack.pop()
-        when(operationStack.pop()) {
+
+        when (operationStack.pop()) {
             '+' -> numberStack.push(first + second)
             '-' -> numberStack.push(first - second)
             '*' -> numberStack.push(first * second)
-            '/' -> if (second != 0.0) numberStack.push(first / second) else throw ArithmeticException("Division by zero attempt.")
+            '/' -> if (second != 0.0) numberStack.push(first / second) else
+                throw ArithmeticException("Division by zero attempt.")
         }
     }
 
@@ -94,27 +110,29 @@ private fun calculate(items: List<String>): Double {
         when {
             it.toDoubleOrNull() != null -> numberStack.push(it.toDouble())
             it == "(" -> operationStack.push(it[0])
-            it == ")" -> example1(numberStack, operationStack)
-            it == "+" || it == "-" || it == "*" || it == "/" -> example(numberStack, operationStack, it[0])
+            it == ")" -> handleCloseBracket(numberStack, operationStack)
+            it == "+" || it == "-" || it == "*" || it == "/" ->
+                handleOperation(numberStack, operationStack, it[0])
         }
     }
 
-    while(!operationStack.empty()) {
+    while (!operationStack.empty()) {
         val second = numberStack.pop()
         val first = numberStack.pop()
 
-        when(operationStack.pop()) {
+        when (operationStack.pop()) {
             '+' -> numberStack.push(first + second)
             '-' -> numberStack.push(first - second)
             '*' -> numberStack.push(first * second)
-            '/' -> if (second != 0.0) numberStack.push(first / second) else TODO()
+            '/' -> if (second != 0.0) numberStack.push(first / second) else
+                throw ArithmeticException("Division by zero attempt.")
         }
     }
 
     return numberStack.pop()
 }
 
-class Parser {
+class Calculator {
 
     fun parse(expression: String): Double {
         val items = removeUseLessBrackets(getItems(expression))

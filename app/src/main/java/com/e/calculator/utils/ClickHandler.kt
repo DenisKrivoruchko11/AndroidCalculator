@@ -1,14 +1,14 @@
 package com.e.calculator.utils
 
 import android.widget.TextView
-import java.lang.Exception
+import java.lang.ArithmeticException
 
 class ClickHandler(private val expressionField: TextView) {
 
     private fun lastNumberContainPoint(): Boolean {
         var index = expressionField.text.lastIndex
 
-        while(index >= 0) {
+        while (index >= 0) {
             if (expressionField.text[index] !in '0'..'9') return expressionField.text[index] == '.'
 
             index--
@@ -47,10 +47,13 @@ class ClickHandler(private val expressionField: TextView) {
         if (expressionField.text[expressionField.text.lastIndex] == '0') {
             if (expressionField.text.lastIndex > 0
                 && (expressionField.text[expressionField.text.lastIndex - 1].isDigit()
-                        ||expressionField.text[expressionField.text.lastIndex - 1] == '.')) {
+                        || expressionField.text[expressionField.text.lastIndex - 1] == '.')
+            ) {
                 expressionField.append(digit.toString())
             } else {
-                expressionField.text = expressionField.text.subSequence(0, expressionField.text.lastIndex)
+                expressionField.text =
+                    expressionField.text.subSequence(0, expressionField.text.lastIndex)
+
                 expressionField.append(digit.toString())
             }
         }
@@ -64,7 +67,8 @@ class ClickHandler(private val expressionField: TextView) {
 
         if (expressionField.text[expressionField.text.lastIndex] in '0'..'9'
             || expressionField.text[expressionField.text.lastIndex] == '('
-            || expressionField.text[expressionField.text.lastIndex] == ')') {
+            || expressionField.text[expressionField.text.lastIndex] == ')'
+        ) {
             expressionField.append(operation.toString())
         }
     }
@@ -83,14 +87,18 @@ class ClickHandler(private val expressionField: TextView) {
             || expressionField.text[expressionField.text.lastIndex] == '-'
             || expressionField.text[expressionField.text.lastIndex] == '*'
             || expressionField.text[expressionField.text.lastIndex] == '/'
-            ||expressionField.text[expressionField.text.lastIndex] == '(') expressionField.append("(")
+            || expressionField.text[expressionField.text.lastIndex] == '('
+        ) {
+            expressionField.append("(")
+        }
     }
 
     fun buttonCloseBracketClick() {
         if (expressionField.text.isEmpty()) return
 
         if (expressionField.text[expressionField.text.lastIndex] in '0'..'9'
-            ||expressionField.text[expressionField.text.lastIndex] == ')') {
+            || expressionField.text[expressionField.text.lastIndex] == ')'
+        ) {
             if (canAddBracket()) expressionField.append(")")
         }
     }
@@ -99,10 +107,11 @@ class ClickHandler(private val expressionField: TextView) {
         if (expressionField.text.isEmpty()) return
 
         if (expressionField.text[expressionField.text.lastIndex] in '0'..'9'
-            ||expressionField.text[expressionField.text.lastIndex] == ')') {
+            || expressionField.text[expressionField.text.lastIndex] == ')'
+        ) {
             try {
-                expressionField.text = Parser().parse(expressionField.text.toString()).toString()
-            } catch (e: Exception) {
+                expressionField.text = Calculator().parse(expressionField.text.toString()).toString()
+            } catch (e: ArithmeticException) {
 
             }
         }

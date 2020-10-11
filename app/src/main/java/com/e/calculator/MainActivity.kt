@@ -43,15 +43,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         val expressionField = findViewById<TextView>(R.id.expressionField)
         val buttons = arrayOf(
-                R.id.button1, R.id.button2, R.id.button3, R.id.buttonPlus,
-                R.id.button4, R.id.button5, R.id.button6, R.id.buttonMinus,
-                R.id.button7, R.id.button8, R.id.button9, R.id.buttonMultiply,
-                R.id.buttonOpenBracket, R.id.button0, R.id.buttonCloseBracket, R.id.buttonDivide,
-                R.id.buttonPoint, R.id.buttonEqual, R.id.buttonC, R.id.buttonCE
+            R.id.button1, R.id.button2, R.id.button3, R.id.buttonPlus,
+            R.id.button4, R.id.button5, R.id.button6, R.id.buttonMinus,
+            R.id.button7, R.id.button8, R.id.button9, R.id.buttonMultiply,
+            R.id.buttonOpenBracket, R.id.button0, R.id.buttonCloseBracket, R.id.buttonDivide,
+            R.id.buttonPoint, R.id.buttonEqual, R.id.buttonC, R.id.buttonCE
         )
 
         addClicks(buttons, expressionField)
