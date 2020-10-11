@@ -110,7 +110,7 @@ class ClickHandler(private val expressionField: TextView) {
             || expressionField.text[expressionField.text.lastIndex] == ')'
         ) {
             try {
-                expressionField.text = Calculator().parse(expressionField.text.toString()).toString()
+                expressionField.text = Calculator().calculate(expressionField.text.toString()).toString()
             } catch (e: ArithmeticException) {
 
             }

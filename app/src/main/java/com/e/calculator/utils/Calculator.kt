@@ -134,7 +134,7 @@ private fun calculate(items: List<String>): Double {
 
 class Calculator {
 
-    fun parse(expression: String): Double {
+    fun calculate(expression: String): Double {
         val items = removeUseLessBrackets(getItems(expression))
 
         return calculate(items)
